@@ -12,7 +12,7 @@ double getValue();
  * @brief проверяет существование куба по введенному ребру
  * @param a - первая сторона треугольника
  */
-void checkExist(const double a);
+void checkPositive(const double a);
 
 /**
  * @brief рассчитывает площадь грани куба
@@ -43,7 +43,7 @@ int main()
 {
     cout << "Enter side ";
     double a = getValue();
-    checkExist(a);
+    checkPositive(a);
     cout << "Area is " << getArea(a) << endl;
     cout << "FullArea is " << getFullArea(a) << endl;
     cout << "Volume is " << getVolume(a) << endl;
@@ -62,9 +62,9 @@ double getValue()
     return value;
 }
 
-void checkExist(const double a)
+void checkPositive(const double a)
 {
-    if (a < 0 )
+    if (a <= 0)
     {
         cout << "It can't be square" << endl;
         abort();
@@ -73,7 +73,7 @@ void checkExist(const double a)
 
 double getArea(const double a)
 {
-    return pow(a,2);
+    return pow(a, 2);
 }
 double getFullArea(const double a)
 {
