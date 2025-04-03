@@ -1,0 +1,85 @@
+#include <iostream>
+#include <stdlib.h>
+#include <cmath>
+using namespace std;
+/**
+ * @brief считывает значение с клавиатуры с проверкой ввода
+ * @return введенное значение
+ */
+double getValue();
+
+/**
+ * @brief проверяет существование куба по введенному ребру
+ * @param a - первая сторона треугольника
+ */
+void checkPositive(const double a);
+
+/**
+ * @brief рассчитывает площадь грани куба
+ * @param a - первая сторона треугольника
+ * @return площадь грани куба
+ */
+double getArea(const double a);
+
+/**
+ * @brief рассчитывает площадь полной поверхности куба
+ * @param a - первая сторона треугольника
+ * @return площадь полной поверхности куба
+ */
+double getFullArea(const double a);
+
+/**
+ * @brief рассчитывает обьем  куба
+ * @param a - первая сторона треугольника
+ * @return обьем  куба
+ */
+double getVolume(const double a);
+
+/**
+ * @brief точка входа в программу
+ * @return 0, если прогамма выполнена корректно, иначе 1
+ */
+int main()
+{
+    cout << "Enter side ";
+    double a = getValue();
+    checkPositive(a);
+    cout << "Area is " << getArea(a) << endl;
+    cout << "FullArea is " << getFullArea(a) << endl;
+    cout << "Volume is " << getVolume(a) << endl;
+    return 0;
+}
+
+double getValue()
+{
+    double value;
+    cin >> value;
+    if (cin.fail())
+    {
+        cout << "Incorrect value" << endl;
+        abort();
+    }
+    return value;
+}
+
+void checkPositive(const double a)
+{
+    if (a <= 0)
+    {
+        cout << "It can't be square" << endl;
+        abort();
+    }
+}
+
+double getArea(const double a)
+{
+    return pow(a, 2);
+}
+double getFullArea(const double a)
+{
+    return pow(a, 2) * 6;
+}
+double getVolume(const double a)
+{
+    return pow(a, 3);
+}
