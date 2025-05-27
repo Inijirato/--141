@@ -1,223 +1,198 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-
+#include <ctime>   // Для time()
 using namespace std;
-
 /**
- * @brief считывает целое число с клавиатуры с проверкой ввода
- * @return считанное значение
-*/
+ * @brief Считывает значение с клавиатуры с проверкой ввода
+ * @return Введенное значение
+ */
 int getValue();
-
 /**
- * @brief Получает и проверяет размер массива
- * @return Размер массива
+ * @brief считывает рамер массива 
+ * @param n -размер массива
+ * @return (size_t)n
  */
 size_t getSize();
-
 /**
- * @brief Проверяет корректность размера массива
- * @param n Проверяемое значение размера
- * @return Завершает программу при n <= 0
+ *@brief проверка введённого размера массива
+ * @param n-размер массива
  */
 void checkN(const int n);
-
 /**
- * @brief Заполняет массив случайными значениями
- * @param arr Указатель на массив
- * @param n Размер массива
- * @param minn Минимальное значение
- * @param maxn Максимальное значение
+ *@brief ввод элементов массива с клавиатуры
+ * @param array[i]
  */
-void fillArrayRandom(int* arr, const int n, const int minn, const int maxn);
+void fillArray(int* array, const int n);
 /**
- * @brief Заполняет массив случайными значениями
- * @param arr Указатель на массив
- * @param n Размер массива
+ *@brief вывод массива в консоль
+ * @param array[i]
  */
-void fillArrayManualy(int* arr, const int n);
+void printArray(const int* array, const int n);
 /**
- * @brief выводит массив
- * @param arr Указатель на массив
- * @param n Размер массива
+ * @brief суммирует отрицательные элементы массива
+ * @param array[i]<0
  */
-void printArray(int* arr, const int n);
+int sumOfNegativeElements(const int* array, const int n);
 /**
- * @brief рассчитывает сумму элементов
- * @param arr Указатель на массив
- * @param n Размер массива
+ * @brief сумма элементов значение которых не больше A
+ * @param A-число введённое пользователем
  */
-int sumOfElements(int* arr, const int n);
+int countPositiveLessThanA(const int* array, const int n, const int A);
 /**
- * @brief сортирует значения массива
- * @param arr Указатель на массив
- * @param n Размер массива
+ *@brief-вычисление номера последней пары соседних элементов с разными знаками  
+ *@param array[i] 
  */
-void sortArray(int* arr, const int n);
+int findLastPair(const int* array, const int n);
 /**
- * @brief ищет отрицательные значения в массиве
- * @param arr Указатель на массив
- * @param n Размер массива
+ *@brief-функция для заполнения массива случайными числами промежутка 
  */
-size_t getIndexOfFirstNegative(int* arr, const int n);
+void fillRandom(int* array, const size_t n, const int start, const int end);
 /**
- * @brief создает другой массив для сортировки 
- * @param arr Указатель на массив
- * @param n Размер массива
- */
-int* copyArray(int* arr, const int n);
-/**
-* @brief Перечисление для выбора способа заполнения данных
-* @param MANUALY Выбор ручного заполнения массива
-* @param RANDOM Выбор автоматического заполнения массива
+* @brief Точка входа в программу
+* @return 1, если программа выполнена корректно, иначе 0
 */
-enum FillMode { RANDOM, MANUALY };
-/**
- * @brief Точка входа в программу
- * @return 0 при успешном выполнении
- */
-int main()
-{
+int main() {
+    enum { RANDOM = 1, MANUAL = 2 };
+
+    cout << "Enter n: ";
     size_t n = getSize();
-    int* arr = new int[n];
-    cout << "Select fill mode (0 - RANDOM, 1 - MANUAL): ";
-    int select = getValue();
+// Создаем массив
+    int* array = new int[n]; // Выделяем память для массива
+    cout << "Enter the way to fill array: " << (int)MANUAL <<
+        " to fill manually, " << (int)RANDOM << " to fill randomly: ";
+    int choice = getValue();
+    int start = 0;
+    int end = 0;
 
+    switch (choice) {
+        case RANDOM:
+            cout << "Enter start: ";
+            start = getValue();
+            cout << "Enter end: ";
+            end = getValue();
 
-    switch (select)
-    {
-    case RANDOM:
-        fillArrayRandom(arr, n, -100, 100); 
-        break;
-    case MANUALY:
-        fillArrayManualy(arr, n);
-        break;
-    default:
-        cout << "erorr" << endl;
-        delete[] arr;
-        return 1;
+            fillRandom(array, n, start, end); // Заполняем массив случайными числами
+            break;
+        case MANUAL:
+            fillArray(array, n); // Заполняем массив вручную
+            break;
+        default:
+            cout << "Error" << endl;
+            delete[] array; // Освобождаем память перед выходом
+            return 1;
     }
-    cout << "Original array: ";
-    printArray(arr, n);
-    cout << "Sum of elements multiples 3: " << sumOfElements(arr, n) << endl;
-    size_t index = getIndexOfFirstNegative(arr, n);
-    if (index == n)
-    {
-        cout << "No negative elements" << endl;
-    }
-    else
-    {
-        cout << "Index of first negative element: " << index + 1 << endl;
-    }
-    int* sortArr = copyArray(arr, n);
-    sortArray(sortArr, n);
-    cout << "Sorted array: ";
-    printArray(sortArr, n);
-    delete[] sortArr;
-    delete[] arr;
 
-    return 0;
+   printArray(array,n);
+    // 1. Найти сумму отрицательных элементов
+    int sumNegatives = sumOfNegativeElements(array, n);
+    cout << "Сумма отрицательных элементов: " << sumNegatives << endl;
+    // 2. Найти количество положительных элементов, не превосходящих A
+    cout << "Введите число A: ";
+    int A = getValue();
+    int countPositives = countPositiveLessThanA(array, n, A);
+    cout << "Количество положительных элементов, не превосходящих " << A << ": " << countPositives << endl;
+    // 3. Найти номер последней пары соседних элементов с разными знаками
+    int lastPairIndex = findLastPair(array, n);
+    if (lastPairIndex != -1) {
+        cout << "Номер последней пары соседних элементов с разными знаками: " << lastPairIndex + 1 << endl;
+    } else {
+        cout << "Нет пар соседних элементов с разными знаками." << endl;
+    }
+    delete[] array;
 }
 int getValue()
 {
-    int value;
-    while (!(cin >> value)) {
-        cout << "Invalid input. Please enter an integer: ";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    int value = 0;
+    cin>>value;
+    if (cin.fail())
+    {
+        cout<<"Error"<<endl;
+        abort();
     }
     return value;
 }
 
 size_t getSize()
 {
-    cout << "Enter array size (n >= 1): ";
+    std::cout<<"Введите размер массива"<<endl;
     int n = getValue();
     checkN(n);
-    return static_cast<size_t>(n);
+    return (size_t)n;
 }
-
 void checkN(const int n)
 {
-    if (n <= 0)
+    if (n<=0)
     {
-        cout << "Error: size must be >= 1" << endl;
-        exit(1);
+        cout<<"Error, некорректное значение"<<endl;
+        abort();
     }
 }
-
-void fillArrayRandom(int* arr, const int n, const int minn, const int maxn)
+void fillArray(int* array, const int n) 
 {
-    srand(time(0));
-    for (size_t i = 0; i < n; i++)
-    {
-        arr[i] = rand() % (maxn - minn + 1) + minn;
+    for (size_t i = 0; i < n; i++) {
+        cout << "Введите arr[" << i + 1 << "] = ";
+        array[i] = getValue();
     }
 }
-
-void fillArrayManualy(int* arr, const int n)
+void fillArrayRandom(int* array, const int n, const int start, const int end) 
 {
-    for (size_t i = 0; i < n; i++)
-    {
-        cout << "[" << i + 1 << "] = ";
-        arr[i] = getValue();
+    if (start < end ) {abort();}
+    for (size_t i = 0; i < n; i++) {
+        array[i] = rand() % (end - start + 1); // Генерация случайных чисел в диапазоне [-100; 200]
     }
 }
-
-void printArray(int* arr, const int n)
+void printArray(const int* array, const int n)
 {
-    for (size_t i = 0; i < n; i++)
+    cout << "Массив: ";
+    for (size_t i = 0; i < n; i++) 
     {
-        cout << arr[i] << " ";
+        cout << array[i] << " ";
     }
     cout << endl;
 }
-
-int sumOfElements(int* arr, const int n)
+int sumOfNegativeElements(const int* array, const int n) 
 {
-    int result = 0;
-    for (size_t i = 0; i < n; i++)
+    int sum = 0;
+    for (size_t i = 0; i < n; i++) 
     {
-        if (arr[i] % 3 == 0)  
+        if (array[i] < 0) 
         {
-            result += arr[i];
+            sum += array[i];
         }
     }
-    return result;
+    return sum;
 }
+int countPositiveLessThanA(const int* array, const int n, const int A)
 
-size_t getIndexOfFirstNegative(int* arr, const int n)
 {
-    for (size_t i = 0; i < n; i++)
+    
+    int count = 0;
+    for (size_t i = 0; i < n; i++) 
     {
-        if (arr[i] < 0)
+        if (array[i] > 0 && array[i] <= A)
         {
-            return i;
+            count++;
         }
     }
-    return n;
+    return count;
 }
-
-void sortArray(int* arr, const int n)
+int findLastPair(const int* array, const int n) 
 {
-    for (size_t i = 0; i < n - 1; i++)
+    for (int i = n - 2; i >= 0; i--) 
     {
-        for (size_t j = 0; j < n - i - 1; j++)
+        if ((array[i] < 0 && array[i + 1] >= 0) || (array[i] >= 0 && array[i + 1] < 0)) 
         {
-            if (arr[j] > arr[j + 1])
-            {
-                swap(arr[j], arr[j + 1]);
-            }
+            return i; // Возвращаем индекс первого элемента пары
         }
     }
+    return -1; // Если не нашли
 }
-int* copyArray(int* arr, const int n)
+void fillRandom(int* array,  const size_t n, const int start, const int end)
 {
-    int* copyArr = new int[n];
-    for (size_t i = 0; i < n; i++)
+    srand(time(0));
+    for (size_t i = 0; i<n; i++ )
     {
-        copyArr[i] = arr[i];
+   
+            array[i] = rand() % (end - start +1 ) + start;
+        }
     }
-    return copyArr;
-}
+    
