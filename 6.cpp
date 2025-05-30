@@ -11,7 +11,7 @@ using namespace std;
 int getValue();
 
 /**
- * @brief считывает рамер массива 
+ * @brief считывает рамер массива
  * @param n -размер массива
  * @return (size_t)n
  */
@@ -49,7 +49,7 @@ int countPositiveLessThanA(const int* array, const int n, const int A);
  */
 int findLastPair(const int* array, const int n);
 /**
- *@brief-функция для заполнения массива случайными числами промежутка 
+ *@brief-функция для заполнения массива случайными числами промежутка
  */
 void fillRandom(int* array, const size_t n, const int start, const int end);
 
@@ -77,6 +77,10 @@ int main() {
         start = getValue();
         cout << "Enter end: ";
         end = getValue();
+        if (start <= end)
+        {
+            abort();
+        }
 
         fillRandom(array, n, start, end); // Заполняем массив случайными числами
         break;
@@ -87,6 +91,7 @@ int main() {
         cout << "Error" << endl;
         delete[] array; // Освобождаем память перед выходом
         return 1;
+    }
         printArray(array, n);
         // 1. Найти сумму отрицательных элементов
         int sumNegatives = sumOfNegativeElements(array, n);
@@ -104,75 +109,72 @@ int main() {
         else {
             cout << "Нет пар соседних элементов с разными знаками." << endl;
         }
-        delete[] array;
-        return 0;
+}
+int getValue()
+{
+    int value = 0;
+    cin >> value;
+    if (cin.fail())
+    {
+        cout << "Error" << endl;
+        abort();
+    }
+    return value;
+}
+
+size_t getSize()
+{
+    std::cout << "Введите размер массива" << endl;
+    int n = getValue();
+    checkN(n);
+    return (size_t)n;
+}
+void checkN(const int n)
+{
+    if (n <= 0)
+    {
+        cout << "Error, некорректное значение" << endl;
+        abort();
     }
 }
-    int getValue()
+void fillArray(int* array, const int n)
+{
+    for (size_t i = 0; i < n; i++) {
+        cout << "Введите arr[" << i + 1 << "] = ";
+        array[i] = getValue();
+    }
+}
+void fillArrayRandom(int* array, const int n, const int start, const int end)
+{
+    if (start < end) { abort(); }
+    for (size_t i = 0; i < n; i++) {
+        array[i] = rand() % (end - start + 1); // Генерация случайных чисел в диапазоне [-100; 200]
+    }
+}
+void printArray(const int* array, const int n)
+{
+    cout << "Массив: ";
+    for (size_t i = 0; i < n; i++)
     {
-        int value = 0;
-        cin >> value;
-        if (cin.fail())
+        cout << array[i] << " ";
+    }
+    cout << endl;
+}
+int sumOfNegativeElements(const int* array, const int n)
+{
+    int sum = 0;
+    for (size_t i = 0; i < n; i++)
+    {
+        if (array[i] < 0)
         {
-            cout << "Error" << endl;
-            abort();
-        }
-        return value;
-    }
-
-    size_t getSize()
-    {
-        std::cout << "Введите размер массива" << endl;
-        int n = getValue();
-        checkN(n);
-        return (size_t)n;
-    }
-    void checkN(const int n)
-    {
-        if (n <= 0)
-        {
-            cout << "Error, некорректное значение" << endl;
-            abort();
+            sum += array[i];
         }
     }
-    void fillArray(int* array, const int n)
-    {
-        for (size_t i = 0; i < n; i++) {
-            cout << "Введите arr[" << i + 1 << "] = ";
-            array[i] = getValue();
-        }
-    }
-    void fillArrayRandom(int* array, const int n, const int start, const int end)
-    {
-        if (start < end) { abort(); }
-        for (size_t i = 0; i < n; i++) {
-            array[i] = rand() % (end - start + 1); // Генерация случайных чисел в диапазоне [-100; 200]
-        }
-    }
-    void printArray(const int* array, const int n)
-    {
-        cout << "Массив: ";
-        for (size_t i = 0; i < n; i++)
-        {
-            cout << array[i] << " ";
-        }
-        cout << endl;
-    }
-    int sumOfNegativeElements(const int* array, const int n)
-    {
-        int sum = 0;
-        for (size_t i = 0; i < n; i++)
-        {
-            if (array[i] < 0)
-            {
-                sum += array[i];
-            }
-        }
-        return sum;
-    }
-    int countPositiveLessThanA(const int* array, const int n, const int A)
-    {
-        int count = 0;
+    return sum;
+}
+int countPositiveLessThanA(const int* array, const int n, const int A)
+{
+    int count = 0;
     for (size_t i = 0; i < n; i++)
     {
         if (array[i] > 0 && array[i] <= A)
