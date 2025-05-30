@@ -155,10 +155,9 @@ int main()
     cout << "After Task 1 (replaced even elements with column's max absolute):";
     cout << " ";
     printArray(task1Array, m, n);
-    GetCount(task1Array, m, n);
     deleteArray(task1Array, m, n);
-    
-    size_t new_n;
+
+    size_t& new_n = GetCount();
     int** task2Array = removeColumnsWhereFirstGreaterThanLast(array, m, n, new_n);
     cout << "After Task 2 (removed columns with even first element):";
     cout << " ";
