@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <iomanip>
 #include <ctime>
@@ -93,15 +94,26 @@ void replaceMinAbsWithZero(int** array, size_t m, size_t n);
  * @param new_n Количество столбцов в новом массиве
  */
 int** removeColumnsWhereFirstGreaterThanLast(int** array, size_t m, size_t n, size_t& new_n);
-
+/**
+ * @brief Расчитывает старый размер массива для удаления столбцов
+ * @param array Исходный массив
+ * @param m Количество строк
+ * @param n Количество столбцов
+ * @param new_n Количество столбцов в новом массиве
+ */
+int** GetCount(int** array, size_t m, size_t n, size_t& new_n);
 
 /**
 * @brief Перечисление для выбора способа заполнения данных
 * @param MANUALY Выбор ручного заполнения массива
 * @param RANDOM Выбор автоматического заполнения массива
 */
-enum { RANDOM = 5, MANUAL = 6 };
+enum { RANDOM = 1, MANUAL = 2 };
 
+/**
+ * @brief Точка входа в программу
+ * @return возвращает 0, если программа выполнена верно
+*/
 int main()
 {
     cout << "Enter m (rows): ";
@@ -139,16 +151,17 @@ int main()
 
     int** task1Array = copyArray(array, m, n);
 
-    replaceEvenWithMinAbsColumnNull(task1Array, m, n);
+    replaceMinAbsWithZero(task1Array, m, n);
     cout << "After Task 1 (replaced even elements with column's max absolute):";
-    cout << "";
+    cout << " ";
     printArray(task1Array, m, n);
+    GetCount(task1Array, m, n);
     deleteArray(task1Array, m, n);
-
+    
     size_t new_n;
-    int** task2Array = removeColumnsWithEvenFirstAbsЬMoreLast(array, m, n, new_n);
+    int** task2Array = removeColumnsWhereFirstGreaterThanLast(array, m, n, new_n);
     cout << "After Task 2 (removed columns with even first element):";
-    cout << "";
+    cout << " ";
     if (task2Array != nullptr && new_n > 0)
     {
         printArray(task2Array, m, new_n);
@@ -161,67 +174,7 @@ int main()
 
     deleteArray(array, m, n);
     return 0;
-
-    int main()
-    {
-        cout << "Enter m (rows): ";
-        size_t m = getSize();
-        cout << "Enter n (columns): ";
-        size_t n = getSize();
-
-        int** array = getNewArray(m, n);
-
-        cout << "Enter the way to fill array: " << MANUAL << " to fill manually, " << RANDOM << " to fill randomly: ";
-        int choice = getValue();
-        int start = 0, end = 0;
-
-        switch (choice)
-        {
-        case RANDOM:
-            cout << "Enter start: ";
-            start = getValue();
-            cout << "Enter end: ";
-            end = getValue();
-            fillRandom(array, m, n, start, end);
-            break;
-        case MANUAL:
-            fillArray(array, m, n);
-            break;
-        default:
-            cout << "Error";
-            deleteArray(array, m, n);
-            return 1;
-        }
-
-        cout << "Original array:";
-        cout << "";
-        printArray(array, m, n);
-
-        int** task1Array = copyArray(array, m, n);
-        replaceEvenWithMaxAbsColumn(task1Array, m, n);
-        cout << "After Task 1 (replaced even elements with column's max absolute):";
-        cout << "";
-        printArray(task1Array, m, n);
-        deleteArray(task1Array, m, n);
-
-        size_t new_n;
-        int** task2Array = removeColumnsWhereFirstGreaterThanLast(array, m, n, new_n);
-        cout << "After Task 2 (removed columns with even first element):";
-        cout << "";
-        if (task2Array != nullptr && new_n > 0)
-        {
-            printArray(task2Array, m, new_n);
-            deleteArray(task2Array, m, new_n);
-        }
-        else
-        {
-            cout << "No columns left.";
-        }
-
-        deleteArray(array, m, n);
-        return 0;
-    }
-
+}
     int** getNewArray(const size_t m, const size_t n)
     {
         int** array = new int* [m];
@@ -337,31 +290,36 @@ int main()
         }
     }
 
-    int** removeColumnsWhereFirstGreaterThanLast(int** array, size_t m, size_t n, size_t & new_n)
-    {
+    int** GetCount(int** array, size_t m, size_t n, size_t& new_n) {
         size_t count = 0;
-        for (size_t j = 0; j < n; j++)
-        {
-            if (array[0][j] > array[m - 1][j])
-            {
+        for (size_t j = 0; j < n; j++) {
+            if (array[0][j] > array[m - 1][j]) {
                 count++;
             }
         }
-        new_n = n - count;
+        
+        return nullptr;
+    }
 
-        if (count == 0)
-        {
+    int** removeColumnsWhereFirstGreaterThanLast(int** array, size_t m, size_t n, size_t& new_n) {
+        
+        size_t count = 0;
+        for (size_t j = 0; j < n; j++) {
+            if (array[0][j] > array[m - 1][j]) {
+                count++;
+            }
+        }
+      
+
+        if (new_n == 0) {
             return nullptr;
         }
 
         int** newArray = getNewArray(m, new_n);
         size_t new_j = 0;
-        for (size_t j = 0; j < n; j++)
-        {
-            if (array[0][j] <= array[m - 1][j])
-            {
-                for (size_t i = 0; i < m; i++)
-                {
+        for (size_t j = 0; j < n; j++) {
+            if (array[0][j] <= array[m - 1][j]) {
+                for (size_t i = 0; i < m; i++) {
                     newArray[i][new_j] = array[i][j];
                 }
                 new_j++;
